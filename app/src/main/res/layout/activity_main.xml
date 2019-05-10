@@ -27,13 +27,12 @@
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/password" android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/login" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:hint="Hasło"
-            android:drawableLeft="@android:drawable/ic_lock_idle_lock"/>
+            android:drawableLeft="@android:drawable/ic_lock_idle_lock" android:inputType="textPassword"/>
     <TextView
             android:text="REJESTRACJA"
             android:layout_width="wrap_content"
