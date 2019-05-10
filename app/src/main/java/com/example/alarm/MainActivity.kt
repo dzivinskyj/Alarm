@@ -1,10 +1,12 @@
 package com.example.alarm
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.parse.ParseInstallation
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         var pass = findViewById<EditText>(R.id.password).text.toString()
         ParseUser.logInInBackground(login, pass) { parseUser, e ->
             if (parseUser != null) {
-                alertDisplayer("Sucessful Login", "Welcome back $login!")
+                alertDisplayer("Udało się zalogować!", "Witaj ponownie $login!")
             } else {
                 ParseUser.logOut()
                 Toast.makeText(this@MainActivity, "Zły login/hasło.", Toast.LENGTH_LONG).show()

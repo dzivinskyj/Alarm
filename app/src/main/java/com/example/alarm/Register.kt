@@ -3,8 +3,10 @@ package com.example.alarm
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 
@@ -30,7 +32,7 @@ class Register : AppCompatActivity() {
             login.error = "Minimun 5 znaków!"
             error = true
         }
-        if(isEmailValid(email.text.toString())){
+        if(!isEmailValid(email.text.toString())){
             email.error = "Zły format maila"
             error = true
         }
