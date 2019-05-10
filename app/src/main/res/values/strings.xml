@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Alarm</string>
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">Y1kSNlt0aBzSI9VVDa8ISw4xGUw8bdQ1dOzkmJu7</string>
+    <string name="back4app_client_key">5SuqtEXJJQtcN11JELrAQgmrJKwa866qwyjvM0ZR</string>
 </resources>
