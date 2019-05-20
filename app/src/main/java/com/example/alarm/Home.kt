@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.parse.*
+import org.json.JSONArray
 
 
 class Home : AppCompatActivity() {
@@ -18,7 +19,23 @@ class Home : AppCompatActivity() {
     }
 
     fun test(view : View){
-        var message = "Wiadomość: "
+        val parameters = HashMap<String, String>()
+        var channels = "JxAZ6fqOCN CH8txr6UJj"
+        parameters.put("channels", channels)
+        ParseCloud.callFunctionInBackground("pushsample", parameters,
+            FunctionCallback<String> { followers, e ->
+                if (e == null) {
+                    var message = "lol"
+                    /*for(i in 0 until followers.size){
+                        message +=followers[i].toString()+";"
+                    }*/
+                    Toast.makeText(this@Home, message, Toast.LENGTH_LONG).show()
+                } else {
+                    // Something went wrong
+                    Toast.makeText(this@Home, "Oh no: " + e.toString(), Toast.LENGTH_LONG).show()
+                }
+            })
+        /*var message = "Wiadomość: "
         val query = ParseUser.getQuery()
         query.whereEqualTo("email", ParseUser.getCurrentUser().email)
         query.findInBackground { users, e ->
@@ -32,6 +49,6 @@ class Home : AppCompatActivity() {
             } else {
                 // Something went wrong.
             }
-        }
+        }*/
     }
 }
