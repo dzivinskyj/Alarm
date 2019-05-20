@@ -2,6 +2,9 @@ package com.example.alarm
 
 import android.app.Application
 import com.parse.Parse
+import com.parse.ParseInstallation
+
+
 
 class App : Application() {
     override fun onCreate() {
@@ -13,5 +16,8 @@ class App : Application() {
             .server(getString(R.string.back4app_server_url))
             .build()
         )
+        val installation = ParseInstallation.getCurrentInstallation()
+        installation.put("GCMSenderId", "144705776443")
+        installation.saveInBackground()
     }
 }
