@@ -8,10 +8,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import java.util.*
 import android.media.RingtoneManager
-import android.R.string.cancel
-import android.R.string.cancel
-import android.content.Context.ALARM_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
 import android.app.AlarmManager
 
 
@@ -25,7 +21,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager =
             context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val intent_new = Intent(context, Alarm::class.java)
+        val intent_new = Intent(context, ChangeAlarm::class.java)
         intent_new.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         val pendingIntent: PendingIntent =
@@ -37,7 +33,7 @@ class AlarmReceiver : BroadcastReceiver() {
                calendar.time.time -    Calendar.getInstance().getTime().time
 
             if(different <= 0){
-                //usunac alarm
+
             }
                 val secondsInMilli: Long = 1000
                 val minutesInMilli = secondsInMilli * 60

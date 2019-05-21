@@ -1,34 +1,30 @@
 package com.example.alarm
 
 import android.app.*
-import android.app.DatePickerDialog.OnDateSetListener
 import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.provider.AlarmClock
-import android.text.format.DateUtils
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_alarm.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Alarm : AppCompatActivity() {
+class Alarm : Fragment() {
+ override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
 
-    lateinit var notificationManager: NotificationManager
+    return inflater!!.inflate(R.layout.activity_alarm, container, false)  }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alarm)
-
-        val date: TextView = findViewById(R.id.dateView)
+        val date: TextView = dateView
 
         val cal = Calendar.getInstance()
 
@@ -43,7 +39,7 @@ class Alarm : AppCompatActivity() {
             dateView.text = sdf.format(cal.time)
         }
 
-        val time: TextView = findViewById(R.id.timeView)
+        val time: TextView = timeView
 
         val timeSetListener = TimePickerDialog.OnTimeSetListener { view, hour, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hour)
@@ -58,7 +54,7 @@ class Alarm : AppCompatActivity() {
 
         time.setOnClickListener{
             TimePickerDialog(
-                this, timeSetListener,
+                this.context, timeSetListener,
                 cal.get(Calendar.HOUR),
                 cal.get(Calendar.MINUTE), true
             ).show()
@@ -67,7 +63,7 @@ class Alarm : AppCompatActivity() {
 
         date.setOnClickListener {
             DatePickerDialog(
-                this, dateSetListener,
+                this.context, dateSetListener,
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)
@@ -75,38 +71,44 @@ class Alarm : AppCompatActivity() {
         }
 
         cancel.setOnClickListener(){
-            finish()
+             this.activity!!.finish()
         }
 
         saveAlarm.setOnClickListener {
 
             if (cal.time.time < Calendar.getInstance().getTime().time) {
-                Toast.makeText(this, "Termin alarmu już minął", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context, "Termin alarmu już minął", Toast.LENGTH_SHORT).show()
             } else {
+                Toast.makeText(this.context, "Alarm został zapisany.", Toast.LENGTH_SHORT).show()
 
-                val intent1 = Intent(this, AlarmReceiver::class.java)
+                val intent1 = Intent(
+                    this.context,
+                    AlarmReceiver::class.java
+                )
 
                 intent1.putExtra("calendar", cal)
+
                 val pendingIntent: PendingIntent =
-                    PendingIntent.getBroadcast(this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT)
+                    PendingIntent.getBroadcast(this.context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT)
 
 
-                val alarmManager: AlarmManager = this.getSystemService(ALARM_SERVICE) as AlarmManager
+                val alarmManager: AlarmManager = this.context!!.getSystemService(ALARM_SERVICE) as AlarmManager
                 alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
                     (cal.timeInMillis - (2 * 3600 * 1000)),
                     200,
                     pendingIntent
                 )
-                finish()
             }
         }
     }
 
+
+
     override fun onPause() {
         super.onPause()
 
-        val sharedPref: SharedPreferences = this.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref: SharedPreferences = this.activity!!.getPreferences(Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
 
         editor.putString("czas", timeView.text as String)
@@ -121,7 +123,7 @@ class Alarm : AppCompatActivity() {
         super.onResume()
 
 
-        val prefs = this.getPreferences(Context.MODE_PRIVATE)
+        val prefs = this.activity!!.getPreferences(Context.MODE_PRIVATE)
         if (prefs.getString("czas","HH:MM") != "HH:MM") {
             timeView.text= prefs.getString("czas","")
             dateView.text = prefs.getString("data","")

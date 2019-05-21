@@ -1,12 +1,15 @@
 package com.example.alarm
 
+import android.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.parse.*
 import org.json.JSONArray
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class Home : AppCompatActivity() {
@@ -15,7 +18,28 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        findViewById<TextView>(R.id.textView).text = "Zalogowano: ${ParseUser.getCurrentUser().username}!"
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container,Alarm()).commit()
+        var bottomNavigationView : BottomNavigationView = findViewById(R.id.navigation)
+
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            var selectedFragment : androidx.fragment.app.Fragment
+            if(it.itemId == R.id.friendsList){
+
+                selectedFragment = FriendsList()
+            }
+            else  if(it.itemId == R.id.alarm)
+            {
+
+                selectedFragment = Alarm()
+            }
+            else
+            {
+                selectedFragment = Location()
+            }
+
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,selectedFragment).commit()
+            true
+        }
     }
 
     fun test(view : View){
