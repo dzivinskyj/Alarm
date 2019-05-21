@@ -9,10 +9,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import com.parse.ParseInstallation
-import com.parse.LogInCallback
-import com.parse.ParseException
-import com.parse.ParseUser
+import com.parse.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +19,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         ParseInstallation.getCurrentInstallation().saveInBackground()
+
+        if(ParseUser.getCurrentUser()!=null){
+            var intent = Intent(this, Home::class.java)
+            startActivity(intent)
+        }
     }
 
     fun goToRegister(view : View){
@@ -34,6 +37,14 @@ class MainActivity : AppCompatActivity() {
         var pass = findViewById<EditText>(R.id.password).text.toString()
         ParseUser.logInInBackground(login, pass) { parseUser, e ->
             if (parseUser != null) {
+                //Parse.initialize(this as Parse.Configuration)
+                val channels = ArrayList<String>()
+                channels.add(ParseUser.getCurrentUser().objectId.toString())
+                val installation = ParseInstallation.getCurrentInstallation()
+                installation.remove("channels")
+                installation.put("GCMSenderId", "144705776443")
+                installation.put("channels", channels)
+                installation.saveInBackground()
                 alertDisplayer("Udało się zalogować!", "Witaj ponownie $login!")
             } else {
                 ParseUser.logOut()
