@@ -44,7 +44,9 @@
         <meta-data
                 android:name="com.parse.CLIENT_KEY"
                 android:value="@string/back4app_client_key"/>
-
+        <meta-data
+                android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+                android:value="true" />
         <service
                 android:name="com.parse.fcm.ParseFirebaseInstanceIdService"
                 android:exported="true">
