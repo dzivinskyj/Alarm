@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".Register">
         </activity>
+        <activity android:name=".PickLocation">
+        </activity>
         <activity android:name=".ChangeAlarm"
                   android:noHistory="true"
         />
@@ -48,6 +50,9 @@
         <meta-data
                 android:name="com.google.android.gms.ads.AD_MANAGER_APP"
                 android:value="true" />
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="@string/google_maps_key"/>
         <service
                 android:name="com.parse.fcm.ParseFirebaseInstanceIdService"
                 android:exported="true">
