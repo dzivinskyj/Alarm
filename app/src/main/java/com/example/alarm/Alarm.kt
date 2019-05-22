@@ -1,6 +1,8 @@
 package com.example.alarm
 
 import android.app.*
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
@@ -20,6 +22,8 @@ class Alarm : Fragment() {
  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
 
     return inflater!!.inflate(R.layout.activity_alarm, container, false)  }
+    var lat : Double = 0.0
+    var long : Double = 0.0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,6 +31,8 @@ class Alarm : Fragment() {
         val date: TextView = dateView
 
         val cal = Calendar.getInstance()
+
+
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
 
@@ -73,7 +79,12 @@ class Alarm : Fragment() {
         cancel.setOnClickListener(){
              this.activity!!.finish()
         }
+        destinationView.setOnClickListener(){
+            var intent = Intent(this.context, PickLocation::class.java)
+            //startActivity(intent)
+            startActivityForResult(intent, 1);
 
+        }
         saveAlarm.setOnClickListener {
 
             if (cal.time.time < Calendar.getInstance().getTime().time) {
@@ -129,6 +140,19 @@ class Alarm : Fragment() {
             dateView.text = prefs.getString("data","")
             destinationView.text = prefs.getString("miejsce","")
             descriptionView.text = prefs.getString("opis","")
+        }
+    }
+    override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent ) {
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                lat = data.getDoubleExtra("lat", 0.0);
+                long = data.getDoubleExtra("long", 0.0);
+                destinationView.setText("lat: "+lat.toString()+" long: "+long.toString())
+            }
+            if (resultCode == RESULT_CANCELED) {
+
+            }
         }
     }
 
