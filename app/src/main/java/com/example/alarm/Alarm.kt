@@ -14,9 +14,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.parse.ParseException
 import kotlinx.android.synthetic.main.activity_alarm.*
 import java.text.SimpleDateFormat
 import java.util.*
+import com.parse.ParseObject
+import com.parse.ParseUser
+import com.parse.SaveCallback
+import com.parse.ParseQuery
+import com.parse.GetCallback
+
+
+
+
+
 
 class Alarm : Fragment() {
  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
@@ -90,7 +101,40 @@ class Alarm : Fragment() {
             if (cal.time.time < Calendar.getInstance().getTime().time) {
                 Toast.makeText(this.context, "Termin alarmu już minął", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this.context, "Alarm został zapisany.", Toast.LENGTH_SHORT).show()
+
+                val userID = ParseUser.getCurrentUser().objectId.toString()
+
+                val query = ParseQuery.getQuery<ParseObject>("Alarms")
+
+                query.whereEqualTo("UserId", userID)
+
+                query.getFirstInBackground { obj, e ->
+                    if (e == null) {
+                        obj.put("Description", descriptionView.text.toString())
+                        obj.put("AlarmDate", cal.time)
+                        obj.put("TargetLocation", destinationView.text.toString())
+                        obj.put("LastLocation", "A string")
+                        obj.put("Active", true)
+                        obj.put("NotificationsSend", false)
+                        // All other fields will remain the same
+                        obj.saveInBackground()
+                    } else {
+                        val entity = ParseObject("Alarms")
+                        entity.put("UserId", userID)
+                        entity.put("Description", descriptionView.text.toString())
+                        entity.put("AlarmDate", cal.time)
+                        entity.put("TargetLocation", destinationView.text.toString())
+                        entity.put("LastLocation", "A string")
+                        // Saves the new object.
+                        // Notice that the SaveCallback is totally optional!
+                        entity.saveInBackground {
+                            // Here you can handle errors, if thrown. Otherwise, "e" should be null
+                        }
+                    }
+                }
+
+
+
 
                 val intent1 = Intent(
                     this.context,
@@ -110,6 +154,8 @@ class Alarm : Fragment() {
                     200,
                     pendingIntent
                 )
+
+                Toast.makeText(this.context, "Alarm został zapisany.", Toast.LENGTH_SHORT).show()
             }
         }
     }
