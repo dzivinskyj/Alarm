@@ -1,6 +1,10 @@
 package com.example.alarm
 
 import android.app.Application
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import com.parse.Parse
 import com.parse.ParseInstallation
 import com.parse.ParseUser
@@ -23,5 +27,11 @@ class App : Application() {
         val installation = ParseInstallation.getCurrentInstallation()
         installation.put("GCMSenderId", "144705776443")
         installation.saveInBackground()
+
+        if(Build.VERSION.SDK_INT >= 26){
+            var alarmChannel = NotificationChannel("alarmChannel", "Alarm", NotificationManager.IMPORTANCE_HIGH)
+            var manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(alarmChannel)
+        }
     }
 }

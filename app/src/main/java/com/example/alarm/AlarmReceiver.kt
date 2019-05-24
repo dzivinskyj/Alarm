@@ -9,10 +9,7 @@ import androidx.core.app.NotificationCompat
 import java.util.*
 import android.media.RingtoneManager
 import android.app.AlarmManager
-
-
-
-
+import android.os.Build
 
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -81,17 +78,32 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
                 }
 
-                    val builder = NotificationCompat.Builder(context)
-                        .setContentTitle("Twój alarm bezpieczeństwa.")
-                        .setContentText(text)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                        .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
-                        .setAutoCancel(true)
+            if(Build.VERSION.SDK_INT >= 26) {
+                val builder = NotificationCompat.Builder(context, "alarmChannel")
+                    .setContentTitle("Twój alarm bezpieczeństwa.")
+                    .setContentText(text)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+                    .setAutoCancel(true)
 
-                    notificationManager.notify(0, builder.build())
+                notificationManager.notify(0, builder.build())
+            }
+            else{
+                val builder = NotificationCompat.Builder(context)
+                    .setContentTitle("Twój alarm bezpieczeństwa.")
+                    .setContentText(text)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+                    .setAutoCancel(true)
+
+                notificationManager.notify(0, builder.build())
+            }
         }
     }}
 
