@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_change_alarm.*
 import android.app.PendingIntent
 import android.app.AlarmManager
+import com.parse.ParseObject
+import com.parse.ParseQuery
+import com.parse.ParseUser
 
 class ChangeAlarm : AppCompatActivity() {
 
@@ -22,6 +25,18 @@ class ChangeAlarm : AppCompatActivity() {
             startActivity(intent)
         }
         deleteAlarm.setOnClickListener {
+
+            val userID = ParseUser.getCurrentUser().objectId.toString()
+
+            val query = ParseQuery.getQuery<ParseObject>("Alarms")
+
+            query.whereEqualTo("UserId", userID)
+
+            query.getFirstInBackground { obj, e ->
+                if (e == null) {
+                    obj.deleteInBackground()
+                }
+            }
 
             val intent1 = Intent(this, AlarmReceiver::class.java)
             val pendingIntent: PendingIntent =
