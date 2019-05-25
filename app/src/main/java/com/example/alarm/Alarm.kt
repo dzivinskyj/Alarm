@@ -196,8 +196,8 @@ class Alarm : Fragment() {
         editor.commit()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         val prefs = this.activity!!.getPreferences(Context.MODE_PRIVATE)
         if (prefs.getString("czas","HH:MM") != "HH:MM") {
             timeView.text= prefs.getString("czas","")
@@ -213,6 +213,10 @@ class Alarm : Fragment() {
                 lat = data.getDoubleExtra("lat", 0.0);
                 long = data.getDoubleExtra("long", 0.0);
                 activity!!.findViewById<TextView>(R.id.destinationView).text = "lat: $lat long: $long"
+                val prefs = this.activity!!.getPreferences(Context.MODE_PRIVATE).edit()
+                prefs.putString("miejsce", "lat: $lat long: $long")
+                prefs.commit()
+
             }
             if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this.context, "Nay...", Toast.LENGTH_SHORT).show()
