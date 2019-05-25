@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".PickLocation">
         </activity>
+        <activity android:name=".FriendInfo">
+        </activity>
         <activity android:name=".ChangeAlarm"
                   android:noHistory="true"
         />

@@ -87,6 +87,26 @@ class Alarm : Fragment() {
             ).show()
         }
 
+        descriptionView.setOnClickListener{
+            hidden_edit_view.visibility = View.VISIBLE
+            hidden_edit_view.hint = descriptionView.text
+            descriptionView.visibility = View.INVISIBLE
+        }
+        hidden_edit_view.setOnEditorActionListener { textView, i, keyEvent ->
+
+            if(keyEvent!=null) {
+                descriptionView.text = hidden_edit_view.text
+
+                hidden_edit_view.visibility = View.INVISIBLE
+                descriptionView.visibility = View.VISIBLE
+
+                if(hidden_edit_view.text.toString()=="")
+                    descriptionView.text = "Uzupłenij opis"
+
+            }
+            true
+        }
+
         cancel.setOnClickListener(){
              this.activity!!.finish()
         }

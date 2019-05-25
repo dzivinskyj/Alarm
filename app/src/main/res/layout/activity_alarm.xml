@@ -8,7 +8,8 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content" android:id="@+id/linearLayout3"
+            app:layout_constraintTop_toTopOf="parent">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -67,11 +68,11 @@
                     android:layout_marginEnd="8dp"
                     android:layout_width="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_height="wrap_content" android:id="@+id/destinationTextView" />
+                    android:layout_height="wrap_content" android:id="@+id/destinationTextView"/>
             <TextView
                     android:text="Wybierz lokalizację"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/destinationView" />
+                    android:layout_height="wrap_content" android:id="@+id/destinationView"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="horizontal"
@@ -86,14 +87,29 @@
             <TextView
                     android:text="Uzupełnij opis"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/descriptionView" />
+                    android:layout_height="wrap_content" android:id="@+id/descriptionView"
+                    android:clickable="true"
+            />
+            <EditText
+                    android:id="@+id/hidden_edit_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Uzupełnij opis"
+                    android:visibility="gone">
+            </EditText>
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
         <Button
                 android:text="Zapisz"
-                android:layout_width="411dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/saveAlarm"
-                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_marginBottom="8dp"
+        />
     </LinearLayout>
 
 
