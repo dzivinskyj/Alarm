@@ -185,7 +185,7 @@ class Alarm : Fragment() {
                 alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
                     Calendar.getInstance().getTime().time,
-                    60 * 1000,
+                    60 * 1000 * 10,
                     pendingIntent
                 )
 

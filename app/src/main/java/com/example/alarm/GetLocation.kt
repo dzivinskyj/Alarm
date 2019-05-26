@@ -22,17 +22,22 @@ class GetLocation: LocationListener {
         lat = p0!!.latitude
         lon = p0!!.longitude
 
-        val userID = ParseUser.getCurrentUser().objectId.toString()
+        var user = ParseUser.getCurrentUser()
 
-        val query = ParseQuery.getQuery<ParseObject>("Alarms")
+        if(user!=null) {
 
-        query.whereEqualTo("UserId", userID)
+            val userID = user.objectId
 
-        query.getFirstInBackground { obj, e ->
-            if (e == null) {
-                obj.put("LastLocation", "${lat}, ${lon}")
-                // All other fields will remain the same
-                obj.saveInBackground()
+            val query = ParseQuery.getQuery<ParseObject>("Alarms")
+
+            query.whereEqualTo("UserId", userID)
+
+            query.getFirstInBackground { obj, e ->
+                if (e == null) {
+                    obj.put("LastLocation", "${lat}, ${lon}")
+                    // All other fields will remain the same
+                    obj.saveInBackground()
+                }
             }
         }
 
