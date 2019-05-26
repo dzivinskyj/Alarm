@@ -9,7 +9,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/linearLayout3"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="4dp"
+            tools:layout_editor_absoluteX="0dp">
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -24,33 +25,60 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout
                 android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:text="ALARM"
+                    android:textSize="30dp"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/textView2"/>
+            <ImageButton
+                    android:id="@+id/deleteImageButton"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_delete_forever_black_24dp"
+            />
+
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingBottom="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText
+                    android:imeOptions="actionDone"
+                    android:text="Uzupełnij opis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/descriptionView"
+            />
+
+        </LinearLayout>
+        <LinearLayout
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="0dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
-                    android:text="Czas alarmu: "
+                    android:textSize="64dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/timeTextView"/>
-            <TextView
                     android:text="HH:MM"
                     android:layout_width="wrap_content"
+
                     android:layout_height="wrap_content" android:id="@+id/timeView"/>
         </LinearLayout>
         <LinearLayout
+                android:gravity="center"
+                android:paddingBottom="20dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
-                    android:text="Data alarmu:"
-                    android:id="@+id/dateTextView"
-                    android:layout_width="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_height="wrap_content"
-            />
-            <TextView
+                    android:textSize="20dp"
                     android:text="DD.MM.YYYY"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" tools:layout_editor_absoluteY="97dp"
@@ -59,6 +87,7 @@
                     android:layout_marginEnd="8dp"/>
         </LinearLayout>
         <LinearLayout
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -69,34 +98,16 @@
                     android:layout_width="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_height="wrap_content" android:id="@+id/destinationTextView"/>
-            <TextView
-                    android:text="Wybierz lokalizację"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/destinationView"/>
         </LinearLayout>
         <LinearLayout
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <TextView
-                    android:text="Opis:"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:text="Wybierz lokalizację"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/descriptionTextView"/>
-            <TextView
-                    android:text="Uzupełnij opis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/descriptionView"
-                    android:clickable="true"
-            />
-            <EditText
-                    android:id="@+id/hidden_edit_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Uzupełnij opis"
-                    android:visibility="gone">
-            </EditText>
+                    android:layout_height="wrap_content" android:id="@+id/destinationView"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

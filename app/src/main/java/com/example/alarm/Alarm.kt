@@ -28,12 +28,13 @@ import android.location.LocationManager
 import androidx.core.content.ContextCompat.getSystemService
 import android.location.Location
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.InputMethodManager
 import com.example.myapplication.GetLocation
 
 
 class Alarm : Fragment() {
  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
-
     return inflater!!.inflate(R.layout.activity_alarm, container, false)  }
     var lat : Double = 0.0
     var long : Double = 0.0
@@ -94,24 +95,29 @@ class Alarm : Fragment() {
             ).show()
         }
 
-        descriptionView.setOnClickListener{
-            hidden_edit_view.visibility = View.VISIBLE
-            hidden_edit_view.hint = descriptionView.text
-            descriptionView.visibility = View.INVISIBLE
-        }
-        hidden_edit_view.setOnEditorActionListener { textView, i, keyEvent ->
+        descriptionView.setOnEditorActionListener { textView, i, keyEvent ->
 
             if(keyEvent!=null) {
-                descriptionView.text = hidden_edit_view.text
-
-                hidden_edit_view.visibility = View.INVISIBLE
-                descriptionView.visibility = View.VISIBLE
-
-                if(hidden_edit_view.text.toString()=="")
-                    descriptionView.text = "Uzupłenij opis"
+                if(descriptionView.text.toString()=="")
+                    descriptionView.setText("Uzupłenij opis")
+                if(keyEvent.keyCode == KeyEvent.KEYCODE_ENTER){
+                    descriptionView.clearFocus()
+                }
 
             }
             true
+        }
+        deleteImageButton.setOnClickListener(){
+            val intentend = Intent(context!!, AlarmReceiver::class.java)
+            val pendingIntent: PendingIntent =
+                PendingIntent.getBroadcast(context, 0, intentend, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager = context!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.cancel(pendingIntent)
+
+            timeView.text=  "HH:MM"
+            dateView.text =  "DD.MM.YYYY"
+            destinationView.text = "Wybierz miejsce"
+            descriptionView.setText("Uzupełnij opis")
         }
 
         cancel.setOnClickListener(){
@@ -203,7 +209,7 @@ class Alarm : Fragment() {
         editor.putString("czas", timeView.text as String)
         editor.putString("data", dateView.text as String)
         editor.putString("miejsce",destinationView.text as String)
-        editor.putString("opis",descriptionView.text as String)
+        editor.putString("opis",descriptionView.text.toString())
 
         editor.commit()
     }
@@ -215,7 +221,7 @@ class Alarm : Fragment() {
             timeView.text= prefs.getString("czas","")
             dateView.text = prefs.getString("data","")
             destinationView.text = prefs.getString("miejsce","")
-            descriptionView.text = prefs.getString("opis","")
+            descriptionView.setText(prefs.getString("opis",""))
         }
     }
     override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent ) {
