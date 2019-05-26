@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.parse.FunctionCallback
 import com.parse.ParseCloud
 import com.parse.ParseUser
@@ -63,7 +64,8 @@ class FriendsList : Fragment() {
 
             deleteFollower(ParseUser.getCurrentUser().objectId, list[position].toString())
 
-            true
+
+                        true
         }
         //list.set(0, "Domi")
         //adapter.notifyDataSetChanged()
@@ -149,12 +151,15 @@ class FriendsList : Fragment() {
                         }
 
                     list = Array(listOfFriends.size) { i -> listOfFriends.elementAt(i) }
+                    adapter.notifyDataSetChanged()
+
                     adapter = ArrayAdapter<String>(
                         this.context,
                         android.R.layout.simple_list_item_1,
                         list
                     )
                     listview.adapter = adapter
+
 
 
 
@@ -197,8 +202,10 @@ class FriendsList : Fragment() {
                                 if (e == null) {
                                     // Otherwise, you can delete the entire ParseObject from the database
                                     entity.deleteInBackground()
-                                    Toast.makeText(this.context, usernameOfFollower+" has been deleted from friends", Toast.LENGTH_LONG).show()
                                     findFollowers()
+
+                                    Toast.makeText(this.context, "Użytkownik "+user2+" został usunięty z listy znajomych.", Toast.LENGTH_LONG).show()
+
 
 
                                 }
