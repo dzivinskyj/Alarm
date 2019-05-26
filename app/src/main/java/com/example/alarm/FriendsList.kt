@@ -202,8 +202,8 @@ class FriendsList : Fragment() {
                                 if (e == null) {
                                     // Otherwise, you can delete the entire ParseObject from the database
                                     entity.deleteInBackground()
-                                    findFollowers()
 
+                                  
                                     Toast.makeText(this.context, "Użytkownik "+user2+" został usunięty z listy znajomych.", Toast.LENGTH_LONG).show()
 
 
