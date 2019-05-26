@@ -5,7 +5,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.getSystemService
 import android.content.Context.LOCATION_SERVICE
 class GetLocation: LocationListener {
     var lat = 0.0
@@ -16,7 +15,6 @@ class GetLocation: LocationListener {
         this.locationManager = locationManager
     }
     override fun onLocationChanged(p0: Location?) {
-        getLocation()
         lat = p0!!.latitude
         lon = p0!!.longitude
     }
@@ -41,7 +39,7 @@ class GetLocation: LocationListener {
 
     fun getLocation() {
         try {
-            locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5.0f, this)
+            locationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0.0f, this);
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
