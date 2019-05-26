@@ -18,7 +18,7 @@ class GetLocation: LocationListener {
         lat = p0!!.latitude
         lon = p0!!.longitude
     }
-    public fun getLonitude() : Double {
+    public fun getLongitude() : Double {
         return lon
     }
     public fun getLatitude() : Double {
