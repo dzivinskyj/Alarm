@@ -11,7 +11,8 @@ import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_friend_info.*
 import kotlinx.android.synthetic.main.activity_friends_list.*
 import org.json.JSONArray
-
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
     var isFriend  : Boolean = false
