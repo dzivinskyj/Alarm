@@ -2,6 +2,7 @@ package com.example.alarm
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.maps.*
@@ -13,14 +14,21 @@ import kotlinx.android.synthetic.main.activity_friends_list.*
 import org.json.JSONArray
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.parse.ParseQuery
+import com.parse.ParseObject
+
+
 
 class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
     var isFriend  : Boolean = false
+
+    var username = ""
 
     private lateinit var mMap: GoogleMap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friend_info)
+        username = intent.getStringExtra("username")
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
         //        ads:adUnitId="ca-app-pub-2251557349292337/2994514292"
@@ -30,7 +38,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        findFollowers(intent.getStringExtra("username"))
+        findFollowers(username)
 
 
 
@@ -41,7 +49,26 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        setLocation(50.829,19.1377)
+
+        val query = ParseUser.getQuery()
+        query.whereEqualTo("username", username)
+        query.getFirstInBackground{usr, e ->
+            if(e == null){
+                val query2 = ParseQuery.getQuery<ParseObject>("Alarms")
+
+                query2.whereEqualTo("UserId", usr.objectId)
+
+                query2.getFirstInBackground{obj,e ->
+                    if(e==null){
+                        var loc = obj.get("LastLocation").toString().split(", ")
+                        setLocation(loc[0].toDouble(),loc[1].toDouble())
+                    }
+
+                }
+            }
+        }
+
+
     }
 
     fun findFollowers(name : String) {
@@ -87,6 +114,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
         val location = LatLng(lat, lng)
         mMap.addMarker(MarkerOptions().position(location).title("Ostatnia lokalizacja twojego znajomego"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null)
     }
 
 
