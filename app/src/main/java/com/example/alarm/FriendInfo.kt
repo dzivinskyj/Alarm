@@ -139,6 +139,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
                     }
                 }
 
+
             })
 
 

@@ -12,6 +12,9 @@ import android.provider.Settings
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.parse.ParseObject
+import com.parse.ParseQuery
+import com.parse.ParseUser
 
 
 class PopupActivity : AppCompatActivity() {
@@ -32,6 +35,18 @@ class PopupActivity : AppCompatActivity() {
             player.stop()
         })
         builder.setNegativeButton("Wszystko ok!", DialogInterface.OnClickListener { dialog, which ->
+            val userID = ParseUser.getCurrentUser().objectId.toString()
+
+            val query = ParseQuery.getQuery<ParseObject>("Alarms")
+
+            query.whereEqualTo("UserId", userID)
+
+            query.getFirstInBackground { obj, e ->
+                if (e == null) {
+                    obj.deleteInBackground()
+                }
+            }
+
             val intentend = Intent(this!!, AlarmReceiver::class.java)
             val pendingIntent: PendingIntent =
                 PendingIntent.getBroadcast(this, 0, intentend, PendingIntent.FLAG_UPDATE_CURRENT)
