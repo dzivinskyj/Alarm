@@ -15,7 +15,7 @@
                 android:layout_height="wrap_content">
 
             <Button
-                    android:text="X"
+                    android:text="Wyloguj"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/cancel"
                     app:layout_constraintEnd_toEndOf="parent"
