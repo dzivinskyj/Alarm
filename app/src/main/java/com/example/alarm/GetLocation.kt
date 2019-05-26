@@ -5,7 +5,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.getSystemService
+//import android.support.v4.content.ContextCompat.getSystemService
 import android.content.Context.LOCATION_SERVICE
 class GetLocation: LocationListener {
     var lat = 0.0
