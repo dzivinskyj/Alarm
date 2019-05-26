@@ -1,5 +1,6 @@
 package com.example.alarm
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -16,7 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.parse.ParseQuery
 import com.parse.ParseObject
-
+import kotlinx.android.synthetic.main.activity_change_alarm.*
 
 
 class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
@@ -38,6 +39,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        isFriend = false
         findFollowers(username)
 
 
@@ -47,6 +49,10 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        isFriend = false
+    }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -101,8 +107,13 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
                     if(!isFriend)
                     {
 
-                            textView.text = "To nie jest Twoj znajomy"
-                        
+                            textView.text = "Dodaj znajomego"
+                        textView.setOnClickListener {
+                        addFollower(ParseUser.getCurrentUser().objectId.toString(), username )
+
+
+                        }
+
                     }
                 }
 
@@ -118,5 +129,47 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
     }
 
 
+    fun addFollower(user1 : String, user2 : String) {
+        val parametersForFollowers = HashMap<String, String>()
+        var usernameOfFollower = ""
+        parametersForFollowers.put("user1", ParseUser.getCurrentUser().objectId.toString())
+        val query = ParseUser.getQuery()
+        query.whereEqualTo("username", user2)
+        query.findInBackground { users, e ->
+            if (e == null) {
+                // The query was successful, returns the users that matches
+                // the criterias.
+                for (user in users) {
+                    if(user.objectId != "")
+                    {
+                        usernameOfFollower = user.objectId.toString()
+                        System.out.println( "USER2"+ usernameOfFollower)
+                    }
+
+                    println(user.username)
+                }
+                parametersForFollowers.put("user2", usernameOfFollower)
+
+                ParseCloud.callFunctionInBackground("addFollower", parametersForFollowers,
+                    FunctionCallback<HashMap<Any, Any>> { followers, e ->
+                        if (e == null) {
+                            Toast.makeText(this@FriendInfo, user2 + " added to your friends", Toast.LENGTH_LONG).show()
+                            finish()
+                            startActivity(getIntent())
+
+
+                        }
+                        else
+                        {
+                            Toast.makeText(this@FriendInfo, "Oh no: " + e.toString(), Toast.LENGTH_LONG).show()
+
+                        }
+                    })
+            } else {
+                // Something went wrong.
+            }
+        }
+
+    }
 }
 
