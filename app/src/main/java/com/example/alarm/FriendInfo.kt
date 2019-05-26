@@ -92,6 +92,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
 
                                 isFriend = true
 
+                                textView.text = "Ostatnia zapisana lokalizacja"
                                 val mapFragment = supportFragmentManager
                                     .findFragmentById(R.id.mapView) as SupportMapFragment
                                 mapFragment.getMapAsync(this)
@@ -153,7 +154,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
                 ParseCloud.callFunctionInBackground("addFollower", parametersForFollowers,
                     FunctionCallback<HashMap<Any, Any>> { followers, e ->
                         if (e == null) {
-                            Toast.makeText(this@FriendInfo, user2 + " added to your friends", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@FriendInfo, "Użytkownik "+user2 + " dodany do znajomych! ", Toast.LENGTH_LONG).show()
                             finish()
                             startActivity(getIntent())
 
