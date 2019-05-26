@@ -3,10 +3,8 @@ package com.example.alarm
 import android.app.*
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
-import android.content.Context
+import android.content.*
 import android.content.Context.ALARM_SERVICE
-import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,14 +22,8 @@ import com.parse.SaveCallback
 import com.parse.ParseQuery
 import com.parse.GetCallback
 
-
-
-
-
-
 class Alarm : Fragment() {
  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
-
     return inflater!!.inflate(R.layout.activity_alarm, container, false)  }
     var lat : Double = 0.0
     var long : Double = 0.0
@@ -42,7 +34,6 @@ class Alarm : Fragment() {
         val date: TextView = dateView
 
         val cal = Calendar.getInstance()
-
 
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -113,7 +104,7 @@ class Alarm : Fragment() {
         destinationView.setOnClickListener(){
             var intent = Intent(this.context, PickLocation::class.java)
             //startActivity(intent)
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, 1)
 
         }
         saveAlarm.setOnClickListener {
@@ -174,15 +165,13 @@ class Alarm : Fragment() {
                     200,
                     pendingIntent
                 )
-
                 Toast.makeText(this.context, "Alarm został zapisany.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
 
-
-    override fun onPause() {
+        override fun onPause() {
         super.onPause()
 
         val sharedPref: SharedPreferences = this.activity!!.getPreferences(Context.MODE_PRIVATE)
@@ -223,7 +212,5 @@ class Alarm : Fragment() {
             }
         }
     }
-
-
 
 }
