@@ -29,7 +29,7 @@ import com.parse.FindCallback
 class FriendsList : Fragment() {
 
     lateinit var list: Array<String?>
-    var listOfFriends = ArrayList<String>()
+    var listOfFriends = HashSet<String>()
     var listOfAll = ArrayList<String>()
     lateinit var adapter: ArrayAdapter<String>
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -134,15 +134,16 @@ class FriendsList : Fragment() {
             FunctionCallback<ArrayList<Any>> { followers, e ->
                 if (e == null) {
                     var channels = ""
-                    for (i in 0 until followers.size) {
+                //    for (i in 0 until followers.size)
+
                         var jsonArray = JSONArray(followers.toString())
                         for (j in 0 until jsonArray.length()) {
                             listOfFriends.add(jsonArray.getJSONObject(j).get("username").toString())
                             channels += jsonArray.getJSONObject(j).get("username").toString() + " "
 
                         }
-                    }
-                    list = Array(listOfFriends.size) { i -> listOfFriends.get(i) }
+
+                    list = Array(listOfFriends.size) { i -> listOfFriends.elementAt(i) }
                     adapter = ArrayAdapter<String>(
                         this.context,
                         android.R.layout.simple_list_item_1,
@@ -155,4 +156,10 @@ class FriendsList : Fragment() {
                 }
             })
     }
+
+    override fun onResume() {
+        super.onResume()
+        findFollowers()
+    }
+
 }
