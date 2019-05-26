@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
+import android.location.LocationListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,10 +24,11 @@ import com.parse.ParseUser
 import com.parse.SaveCallback
 import com.parse.ParseQuery
 import com.parse.GetCallback
-
-
-
-
+import android.location.LocationManager
+import androidx.core.content.ContextCompat.getSystemService
+import android.location.Location
+import android.util.Log
+import com.example.myapplication.GetLocation
 
 
 class Alarm : Fragment() {
@@ -36,6 +38,9 @@ class Alarm : Fragment() {
     var lat : Double = 0.0
     var long : Double = 0.0
 
+
+    lateinit var locationGetter : GetLocation
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,7 +48,9 @@ class Alarm : Fragment() {
 
         val cal = Calendar.getInstance()
 
+        locationGetter = GetLocation(activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager)
 
+        locationGetter.getLocation()
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
 
@@ -117,9 +124,12 @@ class Alarm : Fragment() {
 
         }
         saveAlarm.setOnClickListener {
-
+            locationGetter.getLocation()
             if (cal.time.time < Calendar.getInstance().getTime().time) {
+
                 Toast.makeText(this.context, "Termin alarmu już minął", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this.context, "$lat, $long", Toast.LENGTH_SHORT).show()
+
             } else {
 
                 val userID = ParseUser.getCurrentUser().objectId.toString()
@@ -133,7 +143,7 @@ class Alarm : Fragment() {
                         obj.put("Description", descriptionView.text.toString())
                         obj.put("AlarmDate", cal.time)
                         obj.put("TargetLocation", destinationView.text.toString())
-                        obj.put("LastLocation", "A string")
+                        obj.put("LastLocation", "${locationGetter.getLatitude()}, ${locationGetter.getLonitude()}")
                         obj.put("Active", true)
                         obj.put("NotificationsSend", false)
                         // All other fields will remain the same
@@ -144,7 +154,9 @@ class Alarm : Fragment() {
                         entity.put("Description", descriptionView.text.toString())
                         entity.put("AlarmDate", cal.time)
                         entity.put("TargetLocation", destinationView.text.toString())
-                        entity.put("LastLocation", "A string")
+                        entity.put("LastLocation", "${locationGetter.getLatitude()}, ${locationGetter.getLonitude()}")
+                        entity.put("Active", true)
+                        entity.put("NotificationsSend", false)
                         // Saves the new object.
                         // Notice that the SaveCallback is totally optional!
                         entity.saveInBackground {
@@ -212,9 +224,9 @@ class Alarm : Fragment() {
             if (resultCode == RESULT_OK) {
                 lat = data.getDoubleExtra("lat", 0.0);
                 long = data.getDoubleExtra("long", 0.0);
-                activity!!.findViewById<TextView>(R.id.destinationView).text = "lat: $lat long: $long"
+                activity!!.findViewById<TextView>(R.id.destinationView).text = "$lat, $long"
                 val prefs = this.activity!!.getPreferences(Context.MODE_PRIVATE).edit()
-                prefs.putString("miejsce", "lat: $lat long: $long")
+                prefs.putString("miejsce", "$lat, $long")
                 prefs.commit()
 
             }
@@ -223,6 +235,7 @@ class Alarm : Fragment() {
             }
         }
     }
+
 
 
 
