@@ -126,7 +126,7 @@ class Alarm : Fragment() {
         destinationView.setOnClickListener(){
             var intent = Intent(this.context, PickLocation::class.java)
             //startActivity(intent)
-            startActivityForResult(intent, 1)
+            startActivityForResult(intent, 1);
 
         }
         saveAlarm.setOnClickListener {
@@ -224,10 +224,10 @@ class Alarm : Fragment() {
             descriptionView.setText(prefs.getString("opis",""))
         }
     }
-    override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent? ) {
+    override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent ) {
 
         if (requestCode == 1) {
-            if (resultCode == RESULT_OK && data!=null) {
+            if (resultCode == RESULT_OK) {
                 lat = data.getDoubleExtra("lat", 0.0);
                 long = data.getDoubleExtra("long", 0.0);
                 activity!!.findViewById<TextView>(R.id.destinationView).text = "$lat, $long"
