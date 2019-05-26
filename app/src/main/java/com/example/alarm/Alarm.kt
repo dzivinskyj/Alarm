@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
-import android.location.LocationListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,11 +18,7 @@ import kotlinx.android.synthetic.main.activity_alarm.*
 import java.text.SimpleDateFormat
 import java.util.*
 import android.location.LocationManager
-import androidx.core.content.ContextCompat.getSystemService
-import android.location.Location
-import android.util.Log
 import android.view.KeyEvent
-import android.view.inputmethod.InputMethodManager
 import com.example.myapplication.GetLocation
 import com.parse.*
 
@@ -149,7 +144,7 @@ class Alarm : Fragment() {
                         obj.put("Description", descriptionView.text.toString())
                         obj.put("AlarmDate", cal.time)
                         obj.put("TargetLocation", destinationView.text.toString())
-                        obj.put("LastLocation", "${locationGetter.getLatitude()}, ${locationGetter.getLonitude()}")
+                        obj.put("LastLocation", "${locationGetter.getLatitude()}, ${locationGetter.getLongitude()}")
                         obj.put("Active", true)
                         obj.put("NotificationsSend", false)
                         // All other fields will remain the same
@@ -160,7 +155,7 @@ class Alarm : Fragment() {
                         entity.put("Description", descriptionView.text.toString())
                         entity.put("AlarmDate", cal.time)
                         entity.put("TargetLocation", destinationView.text.toString())
-                        entity.put("LastLocation", "${locationGetter.getLatitude()}, ${locationGetter.getLonitude()}")
+                        entity.put("LastLocation", "${locationGetter.getLatitude()}, ${locationGetter.getLongitude()}")
                         entity.put("Active", true)
                         entity.put("NotificationsSend", false)
                         // Saves the new object.
