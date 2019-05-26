@@ -1,5 +1,6 @@
 package com.example.alarm
 
+import android.annotation.SuppressLint
 import android.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,6 +21,8 @@ class Home : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container,Alarm()).commit()
         var bottomNavigationView : BottomNavigationView = findViewById(R.id.navigation)
+
+        bottomNavigationView.selectedItemId = R.id.alarm
 
         bottomNavigationView.setOnNavigationItemSelectedListener {
             var selectedFragment : androidx.fragment.app.Fragment
