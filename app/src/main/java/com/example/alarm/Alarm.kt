@@ -15,15 +15,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.parse.ParseException
 import kotlinx.android.synthetic.main.activity_alarm.*
 import java.text.SimpleDateFormat
 import java.util.*
-import com.parse.ParseObject
-import com.parse.ParseUser
-import com.parse.SaveCallback
-import com.parse.ParseQuery
-import com.parse.GetCallback
 import android.location.LocationManager
 import androidx.core.content.ContextCompat.getSystemService
 import android.location.Location
@@ -31,6 +25,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import com.example.myapplication.GetLocation
+import com.parse.*
 
 
 class Alarm : Fragment() {
@@ -121,7 +116,12 @@ class Alarm : Fragment() {
         }
 
         cancel.setOnClickListener(){
-             this.activity!!.finish()
+            ParseUser.logOutInBackground {
+                val installation = ParseInstallation.getCurrentInstallation()
+                installation.remove("channels")
+                this.activity!!.finish()
+
+            }
         }
         destinationView.setOnClickListener(){
             var intent = Intent(this.context, PickLocation::class.java)
