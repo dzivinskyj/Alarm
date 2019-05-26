@@ -224,9 +224,9 @@ class Alarm : Fragment() {
             descriptionView.setText(prefs.getString("opis",""))
         }
     }
-    override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent ) {
+    override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent? ) {
 
-        if (requestCode == 1) {
+        if (requestCode == 1 && data!=null) {
             if (resultCode == RESULT_OK) {
                 lat = data.getDoubleExtra("lat", 0.0);
                 long = data.getDoubleExtra("long", 0.0);
