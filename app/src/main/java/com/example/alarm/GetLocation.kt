@@ -6,6 +6,10 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.content.Context.LOCATION_SERVICE
+import com.parse.ParseObject
+import com.parse.ParseQuery
+import com.parse.ParseUser
+
 class GetLocation: LocationListener {
     var lat = 0.0
     var lon = 0.0
@@ -17,6 +21,22 @@ class GetLocation: LocationListener {
     override fun onLocationChanged(p0: Location?) {
         lat = p0!!.latitude
         lon = p0!!.longitude
+
+        val userID = ParseUser.getCurrentUser().objectId.toString()
+
+        val query = ParseQuery.getQuery<ParseObject>("Alarms")
+
+        query.whereEqualTo("UserId", userID)
+
+        query.getFirstInBackground { obj, e ->
+            if (e == null) {
+                obj.put("LastLocation", "${lat}, ${lon}")
+                // All other fields will remain the same
+                obj.saveInBackground()
+            }
+        }
+
+
     }
     public fun getLongitude() : Double {
         return lon

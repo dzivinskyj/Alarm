@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_alarm.*
 import java.text.SimpleDateFormat
 import java.util.*
 import android.location.LocationManager
+import android.os.Build
 import android.view.KeyEvent
 import com.example.myapplication.GetLocation
 import com.parse.*
@@ -183,8 +184,8 @@ class Alarm : Fragment() {
                 val alarmManager: AlarmManager = this.context!!.getSystemService(ALARM_SERVICE) as AlarmManager
                 alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
-                    (cal.timeInMillis - (2 * 3600 * 1000)),
-                    200,
+                    Calendar.getInstance().getTime().time,
+                    60 * 1000,
                     pendingIntent
                 )
 
