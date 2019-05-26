@@ -2,12 +2,21 @@ package com.example.alarm
 
 import android.annotation.SuppressLint
 import android.app.Fragment
+import android.content.Context
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.parse.*
 import org.json.JSONArray
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,7 +27,49 @@ class Home : AppCompatActivity() {
     override fun onBackPressed() {
 
     }
+    class MapManager : OnMapReadyCallback, LocationListener {
+        private lateinit var mMap: GoogleMap
+        private var locationManager : LocationManager
+        constructor(locationManager : LocationManager)
+        {
+            this.locationManager = locationManager
+        }
+        override fun onMapReady(p0: GoogleMap?) {
+            //System.out.println("------- On map ready -------")
+            //val sydney = LatLng(-34.0, 151.0)
+            //p0!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+            //p0!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+            mMap = p0!!
+            getLocation()
+        }
 
+        override fun onLocationChanged(p0: Location?) {
+            if(mMap != null) {
+                val location = LatLng(p0!!.latitude, p0!!.longitude)
+                mMap.clear()
+                mMap.addMarker(MarkerOptions().position(location).title("Twoja lokalizacja"))
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
+            }
+        }
+
+        override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+        }
+
+        override fun onProviderEnabled(p0: String?) {
+        }
+
+        override fun onProviderDisabled(p0: String?) {
+        }
+        fun getLocation() {
+            try {
+                locationManager!!.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5.0f, this)
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
+
+        }
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -41,7 +92,12 @@ class Home : AppCompatActivity() {
             }
             else
             {
-                selectedFragment = Location()
+                //selectedFragment = Location(this)
+                var locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val supportMapFragment = com.google.android.gms.maps.SupportMapFragment()
+                val mapManager = MapManager(locationManager)
+                supportMapFragment.getMapAsync(mapManager)
+                selectedFragment = supportMapFragment
             }
 
             supportFragmentManager.beginTransaction().replace(R.id.fragment_container,selectedFragment).commit()
