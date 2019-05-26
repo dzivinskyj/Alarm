@@ -2,6 +2,7 @@ package com.example.alarm
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.parse.ParseQuery
 import com.parse.ParseObject
 import kotlinx.android.synthetic.main.activity_change_alarm.*
+import org.json.JSONObject
 
 
 class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
@@ -29,6 +31,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friend_info)
+        mapView.view!!.visibility = View.GONE
         username = intent.getStringExtra("username")
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
@@ -64,13 +67,33 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
 
                 query2.whereEqualTo("UserId", usr.objectId)
 
-                query2.getFirstInBackground{obj,e ->
-                    if(e==null){
-                        var loc = obj.get("LastLocation").toString().split(", ")
-                        setLocation(loc[0].toDouble(),loc[1].toDouble())
-                    }
+                var params = HashMap<String, String>()
 
-                }
+                params["user2"] = ParseUser.getCurrentUser().objectId
+                params["user1"] = usr.objectId
+
+                ParseCloud.callFunctionInBackground("findFriendship", params,
+                    FunctionCallback<HashMap<Any,Any>> { friendship, e ->
+                        if(e==null){
+                            val query = ParseQuery.getQuery<ParseObject>("Friends")
+                            var json = JSONObject(friendship.toString())
+                            var friendshipId = json.get("id").toString()
+                            System.out.println("friendshipId "+friendshipId)
+                            // Retrieve the object by id
+                            query.getInBackground(friendshipId) { _, e ->
+                                query2.getFirstInBackground { obj, e ->
+                                    if (e == null) {
+                                        var loc = obj.get("LastLocation").toString().split(", ")
+                                        setLocation(loc[0].toDouble(), loc[1].toDouble())
+                                        mapView.view!!.visibility = View.VISIBLE
+                                    }
+
+                                }
+                            }
+                        }
+                    })
+
+
             }
         }
 
@@ -80,9 +103,11 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
     fun findFollowers(name : String) {
         val parametersForFollowers = HashMap<String, String>()
         parametersForFollowers.put("user", ParseUser.getCurrentUser().objectId.toString())
+        //Toast.makeText(this, "Lol", Toast.LENGTH_SHORT).show()
         ParseCloud.callFunctionInBackground("getFollowers", parametersForFollowers,
             FunctionCallback<ArrayList<Any>> { followers, e ->
                 if (e == null) {
+                    //Toast.makeText(this, "Yay", Toast.LENGTH_SHORT).show()
                     for (i in 0 until followers.size) {
                         var jsonArray = JSONArray(followers.toString())
                         for (j in 0 until jsonArray.length()) {
@@ -98,9 +123,6 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
                                 mapFragment.getMapAsync(this)
                                     break
 
-
-
-
                             }
 
                         }
@@ -108,10 +130,9 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
                     if(!isFriend)
                     {
 
-                            textView.text = "Dodaj znajomego"
+                        textView.text = "Dodaj znajomego"
                         textView.setOnClickListener {
                         addFollower(ParseUser.getCurrentUser().objectId.toString(), username )
-
 
                         }
 
