@@ -20,10 +20,7 @@ import com.parse.ParseObject
 import com.parse.GetCallback
 import com.parse.ParseQuery
 import com.parse.FindCallback
-
-
-
-
+import org.json.JSONObject
 
 
 class FriendsList : Fragment() {
@@ -60,6 +57,14 @@ class FriendsList : Fragment() {
             true
         }
 
+        listview.setOnItemLongClickListener {  parent, view, position, id ->
+            // Get the selected item text from ListView
+
+
+            deleteFollower(ParseUser.getCurrentUser().objectId, list[position].toString())
+
+            true
+        }
         //list.set(0, "Domi")
         //adapter.notifyDataSetChanged()
         search_bar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -155,6 +160,69 @@ class FriendsList : Fragment() {
 
                 }
             })
+    }
+
+    fun deleteFollower(user1 : String, user2 : String) {
+        val parametersForFollowers = HashMap<String, String>()
+        var usernameOfFollower = ""
+        parametersForFollowers.put("user1", ParseUser.getCurrentUser().objectId.toString())
+        val query = ParseUser.getQuery()
+        query.whereEqualTo("username", user2)
+        query.findInBackground { users, e ->
+            if (e == null) {
+                // The query was successful, returns the users that matches
+                // the criterias.
+                for (user in users) {
+                    if(user.objectId != "")
+                    {
+                        usernameOfFollower = user.objectId.toString()
+                        System.out.println( "USER2"+ usernameOfFollower)
+                    }
+
+                    println(user.username)
+                }
+                parametersForFollowers.put("user2", usernameOfFollower)
+
+                System.out.println("jedzonko")
+                ParseCloud.callFunctionInBackground("findFriendship", parametersForFollowers,
+                    FunctionCallback<HashMap<Any,Any>> { friendship, e ->
+                        if (e == null) {
+
+                            val query = ParseQuery.getQuery<ParseObject>("Friends")
+                            var json = JSONObject(friendship.toString())
+                            var friendshipId = json.get("id").toString()
+                            System.out.println("friendshipId "+friendshipId)
+                            // Retrieve the object by id
+                            query.getInBackground(friendshipId) { entity, e ->
+                                if (e == null) {
+                                    // Otherwise, you can delete the entire ParseObject from the database
+                                    entity.deleteInBackground()
+                                    Toast.makeText(this.context, usernameOfFollower+" has been deleted from friends", Toast.LENGTH_LONG).show()
+                                    findFollowers()
+
+
+                                }
+                                else
+                                {
+                                    System.out.println("else wewnątrz wewnątrz : "+e.message)
+
+                                }
+                            }
+
+                        }
+                        else
+                        {
+
+                            System.out.println("else wewnątrz : "+e.message)
+                        }
+                    })
+            } else {
+                // Something went wrong.
+                System.out.println("else zewnątrz : "+e.message)
+
+            }
+        }
+
     }
 
     override fun onResume() {
