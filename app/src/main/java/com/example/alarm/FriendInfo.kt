@@ -11,7 +11,8 @@ import com.parse.ParseUser
 import kotlinx.android.synthetic.main.activity_friend_info.*
 import kotlinx.android.synthetic.main.activity_friends_list.*
 import org.json.JSONArray
-
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
     var isFriend  : Boolean = false
@@ -26,6 +27,9 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
         System.out.println(intent.getStringExtra("username"))
         //check if searched user is our friend
         System.out.println("HEJ"+findFollowers(intent.getStringExtra("username")).toString())
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.mapView) as SupportMapFragment
+        mapFragment.getMapAsync(this)
         findFollowers(intent.getStringExtra("username"))
 
 
@@ -37,7 +41,7 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
+        setLocation(50.829,19.1377)
     }
 
     fun findFollowers(name : String) {
@@ -78,6 +82,11 @@ class FriendInfo : AppCompatActivity(),OnMapReadyCallback {
             })
 
 
+    }
+    fun setLocation(lat:Double, lng:Double){
+        val location = LatLng(lat, lng)
+        mMap.addMarker(MarkerOptions().position(location).title("Ostatnia lokalizacja twojego znajomego"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location))
     }
 
 
