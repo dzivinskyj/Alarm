@@ -28,14 +28,19 @@ class AlarmReceiver : BroadcastReceiver() {
             var different =
                calendar.time.time -    Calendar.getInstance().getTime().time
 
-            if(different <= 60000 && different!=0L){
+            if(different > 0){
+                val intent = Intent(context, LocationService::class.java)
+                context.startService(intent)
+            }
+            if(different <= 60000 && different>=0L){
                 val newIntent =Intent(context!!, PopupActivity::class.java)
                 newIntent.putExtra("alarm_message", "a")
                 newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 context.startActivity(newIntent)
+
             }
-            else {
+            else if(different > 60000 && different<= 60 * 1000 * 30){
                 val secondsInMilli: Long = 1000
                 val minutesInMilli = secondsInMilli * 60
                 val hoursInMilli = minutesInMilli * 60
